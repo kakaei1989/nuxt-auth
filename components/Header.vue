@@ -18,18 +18,22 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" @click="logout" href="#">Logout</a>
-                    </li>
-                    <li class="nav-item">
-                        <NuxtLink class="nav-link" activeClass="active" to="/auth/register">Register</NuxtLink>
-                    </li>
-                    <li class="nav-item">
-                        <NuxtLink class="nav-link" activeClass="active" to="/auth/login">Login</NuxtLink>
-                    </li>
+                    <div class="d-flex" v-if="authUser">
+                        <li class="nav-item">
+                            <NuxtLink class="nav-link" activeClass="active" to="/profile">Profile</NuxtLink>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" @click="logout" href="#">Logout</a>
+                        </li>
+                    </div>
+                    <div class="d-flex" v-else>
+                        <li class="nav-item">
+                            <NuxtLink class="nav-link" activeClass="active" to="/auth/register">Register</NuxtLink>
+                        </li>
+                        <li class="nav-item">
+                            <NuxtLink class="nav-link" activeClass="active" to="/auth/login">Login</NuxtLink>
+                        </li>
+                    </div>
                 </ul>
             </div>
         </div>
@@ -40,12 +44,14 @@
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
+const { authUser } = useAuth();
 
 async function logout() {
     await useFetch('/api/auth/logout', {
         method: 'POST'
     });
 
+    authUser.value = null;
     toast.warning("You are logouted!");
     return navigateTo('/')
 }

@@ -36,6 +36,7 @@ const formData = reactive({
     password: ""
 });
 const toast = useToast();
+const { authUser } = useAuth();
 
 async function login() {
    
@@ -46,6 +47,7 @@ async function login() {
             body: formData
         })
 
+        authUser.value = user;
         toast.success("You are logged in!");
         return navigateTo('/')
     } catch (error) {
